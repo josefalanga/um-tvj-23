@@ -1,11 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class DataManager : MonoBehaviour
-{
-    [System.Serializable]
+[System.Serializable]
     public class DataModel
     {
         [System.Serializable]
@@ -62,27 +59,3 @@ public class DataManager : MonoBehaviour
         public List<Icon> icons;
         public List<Block> blocks;
     }
-
-    public DataModel dataModel;
-
-    private void Start()
-    {
-        StartCoroutine(Download("http://um-tecvg-23.herokuapp.com/datos.json"));
-    }
-
-    IEnumerator Download(string url)
-    {
-        UnityWebRequest www = UnityWebRequest.Get(url);
-
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            JsonUtility.FromJsonOverwrite(www.downloadHandler.text, dataModel);
-        }
-    }
-}
