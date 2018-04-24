@@ -13,17 +13,19 @@ public class ScoreManager : MonoBehaviour
 
     public void SendScore(string name, int score, Action<string> OnError)
     {
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+        WWWForm form = new WWWForm();
 
-        formData.Add(new MultipartFormDataSection(string.Format("deviceId={0}", SystemInfo.deviceUniqueIdentifier)));
-        formData.Add(new MultipartFormDataSection(string.Format("playerName={0}", name)));
-        formData.Add(new MultipartFormDataSection(string.Format("score={0}", score.ToString())));
+        form.AddField("deviceId", SystemInfo.deviceUniqueIdentifier);
+        form.AddField("playerName", name);
+        form.AddField("score", score);
 
-        UnityWebRequest uwr = UnityWebRequest.Post(leaderboardPath, formData);
+        UnityWebRequest uwr = UnityWebRequest.Post(leaderboardPath, form);
+
+        uwr.chunkedTransfer = false;
 
         RequestManager.instance.SendRequest(uwr, () =>
         {
-            Debug.Log("Score sent successfully!");
+            Debug.Log(uwr.downloadHandler.text);
         }, OnError);
     }
 
