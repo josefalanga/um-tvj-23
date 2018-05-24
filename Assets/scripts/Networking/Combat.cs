@@ -11,9 +11,11 @@ public class Combat : NetworkBehaviour
 
     public void TakeDamage(int amount)
     {
+        //el daño se hace solo en en el server
         if (!isServer)
             return;
 
+        //como health es SyncVar, se reparte automáticamente a todos los clientes
         health -= amount;
         if (health <= 0)
         {
@@ -25,6 +27,7 @@ public class Combat : NetworkBehaviour
             {
                 health = maxHealth;
 
+                //si el player murió, se hace el rcp de respawn a los clientes
                 // called on the server, will be invoked on the clients
                 RpcRespawn();
             }
